@@ -130,7 +130,7 @@ For more information, refer to [Module Versions](https://www.terraform.io/docs/c
 #### GitHub URI
 Make sure to use `?ref=` version pinning in module source URI when pulling from GitHub.
 Pulling from GitHub is especially useful for development, as you can pin to a specific branch, tag or commit hash.
-Example: `source = github.com/baikonur-oss/%repo_name%?ref=v1.0.0`
+Example: `source = github.com/baikonur-oss/terraform-aws-lambda-eden-api?ref=v0.1.0`
 
 For more information on module version pinning, see [Selecting a Revision](https://www.terraform.io/docs/modules/sources.html#selecting-a-revision) section of Terraform Modules documentation.
 
