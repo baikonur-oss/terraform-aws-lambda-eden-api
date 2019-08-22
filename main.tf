@@ -31,11 +31,10 @@ resource "aws_lambda_function" "function" {
   # WARNING: explicit depends_on from this resource to data.external.package
   # does not help
 
-//  source_code_hash = "${base64sha256(file("${jsonencode(data.external.package.result) == "{}" ? local.package_filename : ""}"))}"
+  //  source_code_hash = "${base64sha256(file("${jsonencode(data.external.package.result) == "{}" ? local.package_filename : ""}"))}"
   tracing_config {
     mode = "${var.tracing_mode}"
   }
-
   environment {
     variables {
       TZ = "${var.timezone}"
@@ -54,7 +53,6 @@ resource "aws_lambda_function" "function" {
       CONFIG_ENV_TYPE       = "${var.config_env_type}"
     }
   }
-
   tags = "${var.tags}"
 }
 
