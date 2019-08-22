@@ -160,7 +160,7 @@ For more information on module version pinning, see [Selecting a Revision](https
 | dynamic\_domain\_name | Route 53 Zone name to use to create dynamic environments | string | n/a | yes |
 | dynamic\_zone\_id | Route 53 Zone ID of zone to use to create dynamic environments | string | n/a | yes |
 | handler | Lambda Function handler (entrypoint) | string | `"main.lambda_handler"` | no |
-| internal | # alb | string | `"false"` | no |
+| internal | Should eden API ALB be internal? | string | `"false"` | no |
 | lambda\_package\_url | Lambda package URL (see Usage in README) | string | n/a | yes |
 | log\_retention\_in\_days | eden API Lambda Function log retention in days | string | `"30"` | no |
 | memory | Lambda Function memory in megabytes | string | `"256"` | no |

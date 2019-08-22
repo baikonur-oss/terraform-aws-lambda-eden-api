@@ -54,7 +54,8 @@ variable "name_prefix" {
 
 ## alb
 variable "internal" {
-  default = false
+  description = "Should eden API ALB be internal?"
+  default     = false
 }
 
 variable "count" {
