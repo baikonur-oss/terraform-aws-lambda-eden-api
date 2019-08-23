@@ -124,7 +124,7 @@ module "eden" {
 
 ### Version pinning
 #### Terraform Module Registry
-Use `version` parameter to pin to a specific version, or to specify a version constraint when pulling from [Terraform Module Registry](https://registry.terraform.io) (`source = baikonur-oss/%module_name%/aws`).
+Use `version` parameter to pin to a specific version, or to specify a version constraint when pulling from [Terraform Module Registry](https://registry.terraform.io) (`source = baikonur-oss/terraform-aws-lambda-eden-api/aws`).
 For more information, refer to [Module Versions](https://www.terraform.io/docs/configuration/modules.html#module-versions) section of Terraform Modules documentation.
 
 #### GitHub URI
