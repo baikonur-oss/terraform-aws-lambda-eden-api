@@ -20,9 +20,9 @@ For CLI flavor, see aws-eden-cli at [GitHub](https://github.com/baikonur-oss/aws
 ```HCL
 module "eden" {
   source  = "baikonur-oss/lambda-eden-api/aws"
-  version = "0.1.0"
+  version = "0.0.2"
 
-  lambda_package_url = "https://github.com/baikonur-oss/terraform-aws-lambda-eden-api/releases/download/v0.1.0/lambda_package.zip"
+  lambda_package_url = "https://github.com/baikonur-oss/terraform-aws-lambda-eden-api/releases/download/v0.0.2/lambda_package.zip"
   name                  = "dev-api-eden"
 
   # eden API ALB variables
