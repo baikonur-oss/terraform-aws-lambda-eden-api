@@ -24,6 +24,8 @@ resource "aws_lambda_function" "function" {
   runtime       = "${var.runtime}"
   memory_size   = "${var.memory}"
   timeout       = "${var.timeout}"
+  
+  filename = local.package_filename
 
   # Below is a very dirty hack to force base64sha256 to wait until
   # package download in data.external.package finishes.
