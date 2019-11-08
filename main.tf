@@ -6,10 +6,6 @@ data "external" "package" {
   program = ["bash", "-c", "curl -s -L -o ${local.package_filename} ${var.lambda_package_url} && echo {}"]
 }
 
-data "aws_ecs_cluster" "target" {
-  cluster_name = "${var.cluster_name}"
-}
-
 resource "aws_cloudwatch_log_group" "logs" {
   name = "/aws/lambda/${var.name}"
 
@@ -38,19 +34,6 @@ resource "aws_lambda_function" "function" {
   environment {
     variables {
       TZ = "${var.timezone}"
-
-      NAME_PREFIX           = "${var.name_prefix}"
-      DOMAIN_NAME_PREFIX    = "${var.domain_name_prefix}"
-      TARGET_CLUSTER        = "${var.cluster_name}"
-      REFERENCE_SERVICE_ARN = "${var.reference_service_arn}"
-      MASTER_ALB_ARN        = "${var.dynamic_alb_arn}"
-      DYNAMIC_ZONE_ID       = "${var.dynamic_zone_id}"
-      DYNAMIC_ZONE_NAME     = "${var.dynamic_domain_name}"
-      CONFIG_BUCKET         = "${var.config_bucket_name}"
-      CONFIG_BUCKET_KEY     = "${var.config_key_name}"
-      CONFIG_UPDATE_KEY     = "${var.config_update_key}"
-      CONFIG_NAME_PREFIX    = "${var.config_name_prefix}"
-      CONFIG_ENV_TYPE       = "${var.config_env_type}"
     }
   }
   tags = "${var.tags}"
