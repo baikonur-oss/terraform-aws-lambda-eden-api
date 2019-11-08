@@ -56,6 +56,8 @@ module "eden" {
 }
 ```
 
+Warning: DynamoDB table for state management is created by aws-eden-cli. Make sure to run `eden config --push` with success at least once before terraform apply. Default table name is `eden`.
+
 ### Example
 #### Create API
 `curl https://eden.example.com/api/v1/create?name=test-create&cirn=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest`
