@@ -48,6 +48,11 @@ variable "tags" {
   default     = {}
 }
 
+variable "eden_table" {
+  description = "eden DynamoDB table name for profiles and envs"
+  default     = "eden"
+}
+
 ## alb
 variable "internal" {
   description = "Should eden API ALB be internal?"

@@ -2,6 +2,10 @@ locals {
   package_filename = "${path.module}/package.zip"
 }
 
+data "aws_dynamodb_table" "eden" {
+  name = "${var.eden_table}"
+}
+
 data "external" "package" {
   program = ["bash", "-c", "curl -s -L -o ${local.package_filename} ${var.lambda_package_url} && echo {}"]
 }
@@ -33,7 +37,8 @@ resource "aws_lambda_function" "function" {
   }
   environment {
     variables {
-      TZ = "${var.timezone}"
+      TZ         = "${var.timezone}"
+      EDEN_TABLE = "${var.eden_table}"
     }
   }
   tags = "${var.tags}"
@@ -75,6 +80,15 @@ module "iam" {
             ],
             "Resource": [
                 "arn:aws:ec2:*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:*"
+            ],
+            "Resource": [
+                "${data.aws_dynamodb_table.eden.arn}"
             ]
         },
         {

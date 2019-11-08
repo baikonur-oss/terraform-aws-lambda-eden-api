@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 
 import boto3
 import botocore
@@ -20,7 +21,7 @@ ecs = boto3.client('ecs')
 s3 = boto3.resource('s3')
 elbv2 = boto3.client('elbv2')
 
-table_name = 'eden'
+table_name = os.environ['EDEN_TABLE']
 
 app = Flask(__name__)
 

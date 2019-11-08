@@ -151,6 +151,7 @@ For more information on module version pinning, see [Selecting a Revision](https
 | config\_bucket\_name | S3 bucket name containing Config JSON file | string | n/a | yes |
 | count |  | string | `"1"` | no |
 | dynamic\_zone\_id | Route 53 Zone ID of zone to use to create dynamic environments | string | n/a | yes |
+| eden\_table | eden DynamoDB table name for profiles and envs | string | `"eden"` | no |
 | handler | Lambda Function handler (entrypoint) | string | `"main.lambda_handler"` | no |
 | internal | Should eden API ALB be internal? | string | `"false"` | no |
 | lambda\_package\_url | Lambda package URL (see Usage in README) | string | n/a | yes |
