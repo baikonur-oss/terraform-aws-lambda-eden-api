@@ -57,7 +57,7 @@ def configure():
                 }), 501
 
     r = dynamodb.get_item(
-        TableName='string',
+        TableName=table_name,
         Key={
             'env_name': {
                 'S': f"_profile_{g.profile}",
@@ -68,7 +68,7 @@ def configure():
     if 'Item' in r:
         if 'profile' in r['Item']:
             try:
-                g.config = json.loads(r['Item']['profile'])
+                g.config = json.loads(r['Item']['profile']['S'])
             except json.JSONDecodeError:
                 logger.error(f"Profile {g.profile} is invalid: {r['Item']['profile']}")
                 return jsonify({
