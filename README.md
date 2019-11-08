@@ -148,16 +148,8 @@ For more information on module version pinning, see [Selecting a Revision](https
 | api\_subnet\_ids | List of subnet IDs for eden API ALB to use | list | n/a | yes |
 | api\_zone\_id | Route 53 Zone ID for eden API ALB | string | n/a | yes |
 | batch\_size | Maximum number of records passed for a single Lambda invocation | string | n/a | yes |
-| cluster\_name | ECS Cluster name (must include reference_service_arn) | string | n/a | yes |
 | config\_bucket\_name | S3 bucket name containing Config JSON file | string | n/a | yes |
-| config\_env\_type | Static string to put for env key in Config JSON file (e.g. dev/stg/prd) | string | n/a | yes |
-| config\_key\_name | Config JSON file key | string | n/a | yes |
-| config\_name\_prefix | Prefix for environment name in Config JSON file | string | n/a | yes |
-| config\_update\_key | Key to put DNS hostnames created by eden to in Config JSON file | string | n/a | yes |
 | count |  | string | `"1"` | no |
-| domain\_name\_prefix | Prefix for domain names created by eden | string | n/a | yes |
-| dynamic\_alb\_arn | ARN of dynamic environment common ALB | string | n/a | yes |
-| dynamic\_domain\_name | Route 53 Zone name to use to create dynamic environments | string | n/a | yes |
 | dynamic\_zone\_id | Route 53 Zone ID of zone to use to create dynamic environments | string | n/a | yes |
 | handler | Lambda Function handler (entrypoint) | string | `"main.lambda_handler"` | no |
 | internal | Should eden API ALB be internal? | string | `"false"` | no |
@@ -165,8 +157,6 @@ For more information on module version pinning, see [Selecting a Revision](https
 | log\_retention\_in\_days | eden API Lambda Function log retention in days | string | `"30"` | no |
 | memory | Lambda Function memory in megabytes | string | `"256"` | no |
 | name | Resource name | string | `"env_manager"` | no |
-| name\_prefix | Prefix to use in names for resources created by eden | string | n/a | yes |
-| reference\_service\_arn | Reference ECS Service ARN | string | n/a | yes |
 | runtime | Lambda Function runtime | string | `"python3.7"` | no |
 | tags | Resource tags | map | `<map>` | no |
 | timeout | Lambda Function timeout in seconds | string | `"60"` | no |
