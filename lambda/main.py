@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 import os
@@ -97,17 +98,29 @@ def create_env():
 
     name: str = request.args.get('name')
     image_uri: str = request.args.get('image_uri')
-    errors = aws_eden_core.methods.create_env(name, image_uri, g.config)
-
-    if not errors:
-        return jsonify({
-            'status': 'ok',
-        }), 200
-    else:
+    # noinspection PyBroadException
+    try:
+        r = aws_eden_core.methods.create_env(name, image_uri, g.config)
+    except Exception as e:
+        logger.error(e)
         return jsonify({
             'status': 'error',
-            'errors': errors,
+            'errors': f"Exception caught",
         }), 501
+
+    table = boto3.resource('dynamodb').Table(table_name)
+    table.put_item(
+        Item={
+            'env_name': f"{g.profile}${r['name']}",
+            'last_updated_time': str(datetime.datetime.now().timestamp()),
+            'endpoint': r['cname'],
+            'name': r['name'],
+        }
+    )
+
+    return jsonify({
+        'status': 'ok',
+    }), 200
 
 
 @app.route('/api/v1/delete')
@@ -119,17 +132,26 @@ def delete_env():
         }), 400
 
     name: str = request.args.get('name')
-    errors = aws_eden_core.methods.delete_env(name, g.config)
-
-    if not errors:
-        return jsonify({
-            'status': 'ok',
-        }), 200
-    else:
+    # noinspection PyBroadException
+    try:
+        r = aws_eden_core.methods.delete_env(name, g.config)
+    except Exception as e:
+        logger.error(e)
         return jsonify({
             'status': 'error',
-            'errors': errors,
+            'errors': f"Exception caught",
         }), 501
+
+    table = boto3.resource('dynamodb').Table(table_name)
+    table.delete_item(
+        Key={
+            'env_name': f"{g.profile}${r['name']}",
+        },
+    )
+
+    return jsonify({
+        'status': 'ok',
+    }), 200
 
 
 def lambda_handler(event, context):
