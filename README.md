@@ -58,7 +58,7 @@ module "eden" {
 
 ### Example
 #### Create API
-`curl https://eden.example.com/api/v1/create?branch=test-create&cirn=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest`
+`curl https://eden.example.com/api/v1/create?name=test-create&cirn=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest`
 
 ```
 2019-04-08T20:32:05.151Z INFO     [main.py:check_cirn:382] Checking if image xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest exists 
@@ -76,7 +76,7 @@ module "eden" {
 2019-04-08T20:32:08.134Z INFO     [main.py:create_env:573] Successfully finished creating environment dev-dynamic-test-create 
 ```
 #### Create API on existing env
-`curl https://eden.example.com/api/v1/create?branch=add-nothing&cirn=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest`
+`curl https://eden.example.com/api/v1/create?name=add-nothing&cirn=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest`
 
 ```
 2019-04-08T20:30:13.491Z INFO     [main.py:check_cirn:382] Checking if image xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest exists 
@@ -97,7 +97,7 @@ module "eden" {
 ```
 
 #### Delete API (existing env)
-`curl https://eden.example.com/api/v1/delete?branch=add-nothing`
+`curl https://eden.example.com/api/v1/delete?name=add-nothing`
 
 ```
 2019-04-10T23:11:38.515Z INFO     [main.py:check_record:495] Checking if record api-add-nothing.dev.example.com. exists in zone Zxxxxxxxxxxxx 
@@ -111,7 +111,7 @@ module "eden" {
 ```
 
 #### Delete API (non-existent env)
-`curl https://eden.example.com/api/v1/delete?branch=add-nothing`
+`curl https://eden.example.com/api/v1/delete?name=add-nothing`
 
 ```
 2019-04-10T23:14:46.216Z INFO     [main.py:check_record:495] Checking if record api-add-nothing.dev.example.com. exists in zone Zxxxxxxxxxxxx 
