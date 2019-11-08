@@ -48,7 +48,7 @@ With multiple profiles, one eden API instance is enough for one account/region. 
 
 ### Example
 #### Create API
-`curl https://eden.example.com/api/v1/create?name=test-create&cirn=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest`
+`curl https://eden.example.com/api/v1/create?name=test-create&cirn=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest&profile=api`
 
 ```
 2019-04-08T20:32:05.151Z INFO     [main.py:check_cirn:382] Checking if image xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest exists 
@@ -66,50 +66,50 @@ With multiple profiles, one eden API instance is enough for one account/region. 
 2019-04-08T20:32:08.134Z INFO     [main.py:create_env:573] Successfully finished creating environment dev-dynamic-test-create 
 ```
 #### Create API on existing env
-`curl https://eden.example.com/api/v1/create?name=add-nothing&cirn=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest`
+`curl https://eden.example.com/api/v1/create?name=test&cirn=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest&profile=api`
 
 ```
 2019-04-08T20:30:13.491Z INFO     [main.py:check_cirn:382] Checking if image xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest exists 
 2019-04-08T20:30:13.553Z INFO     [main.py:check_cirn:401] Image exists 
 2019-04-08T20:30:13.692Z INFO     [main.py:create_env:509] Retrieved reference service arn:aws:ecs:ap-northeast-1:xxxxxxxxxxxx:service/dev/dev01-api 
 2019-04-08T20:30:13.721Z INFO     [main.py:create_task_definition:58] Retrieved reference task definition from arn:aws:ecs:ap-northeast-1:xxxxxxxxxxxx:task-definition/dev01-api:15 
-2019-04-08T20:30:13.788Z INFO     [main.py:create_task_definition:96] Registered new task definition: arn:aws:ecs:ap-northeast-1:xxxxxxxxxxxx:task-definition/dev-dynamic-add-nothing:5 
+2019-04-08T20:30:13.788Z INFO     [main.py:create_task_definition:96] Registered new task definition: arn:aws:ecs:ap-northeast-1:xxxxxxxxxxxx:task-definition/dev-dynamic-test:5 
 2019-04-08T20:30:13.807Z INFO     [main.py:create_target_group:112] Retrieved reference target group: arn:aws:elasticloadbalancing:ap-northeast-1:xxxxxxxxxxxx:targetgroup/dev01-api/9c68a5f91f34d9a4 
-2019-04-08T20:30:13.827Z INFO     [main.py:create_target_group:147] Target group dev-dynamic-add-nothing already exists, skipping creation 
-2019-04-08T20:30:13.877Z INFO     [main.py:create_alb_host_listener_rule:351] ELBv2 listener rule for target group arn:aws:elasticloadbalancing:ap-northeast-1:xxxxxxxxxxxx:targetgroup/dev-dynamic-add-nothing/xxxxxxxx already exists, skipping creation 
-2019-04-08T20:30:13.926Z INFO     [main.py:create_env:538] ECS Service dev-dynamic-add-nothing already exists, skipping creation 
-2019-04-08T20:30:13.926Z INFO     [main.py:create_env:539] Will deploy task definition arn:aws:ecs:ap-northeast-1:xxxxxxxxxxxx:task-definition/dev-dynamic-add-nothing:5 to service dev-dynamic-add-nothing 
-2019-04-08T20:30:14.429Z INFO     [main.py:create_env:549] Successfully deployed task definition arn:aws:ecs:ap-northeast-1:xxxxxxxxxxxx:task-definition/dev-dynamic-add-nothing:5 to service dev-dynamic-add-nothing in cluster dev 
-2019-04-08T20:30:15.248Z INFO     [main.py:check_record:414] Checking if record api-add-nothing.dev.example.com. exists in zone Zxxxxxxxxxxxx 
-2019-04-08T20:30:15.552Z INFO     [main.py:check_record:425] Found existing record api-add-nothing.dev.example.com. in zone Zxxxxxxxxxxxx 
-2019-04-08T20:30:15.552Z INFO     [main.py:create_cname_record:450] CNAME record already exists, doing nothing: api-add-nothing.dev.example.com -> dev-alb-api-dynamic-xxxxxxxxx.ap-northeast-1.elb.amazonaws.com 
-2019-04-08T20:30:15.552Z INFO     [main.py:create_env:573] Successfully finished creating environment dev-dynamic-add-nothing 
+2019-04-08T20:30:13.827Z INFO     [main.py:create_target_group:147] Target group dev-dynamic-test already exists, skipping creation 
+2019-04-08T20:30:13.877Z INFO     [main.py:create_alb_host_listener_rule:351] ELBv2 listener rule for target group arn:aws:elasticloadbalancing:ap-northeast-1:xxxxxxxxxxxx:targetgroup/dev-dynamic-test/xxxxxxxx already exists, skipping creation 
+2019-04-08T20:30:13.926Z INFO     [main.py:create_env:538] ECS Service dev-dynamic-test already exists, skipping creation 
+2019-04-08T20:30:13.926Z INFO     [main.py:create_env:539] Will deploy task definition arn:aws:ecs:ap-northeast-1:xxxxxxxxxxxx:task-definition/dev-dynamic-test:5 to service dev-dynamic-test 
+2019-04-08T20:30:14.429Z INFO     [main.py:create_env:549] Successfully deployed task definition arn:aws:ecs:ap-northeast-1:xxxxxxxxxxxx:task-definition/dev-dynamic-test:5 to service dev-dynamic-test in cluster dev 
+2019-04-08T20:30:15.248Z INFO     [main.py:check_record:414] Checking if record api-test.dev.example.com. exists in zone Zxxxxxxxxxxxx 
+2019-04-08T20:30:15.552Z INFO     [main.py:check_record:425] Found existing record api-test.dev.example.com. in zone Zxxxxxxxxxxxx 
+2019-04-08T20:30:15.552Z INFO     [main.py:create_cname_record:450] CNAME record already exists, doing nothing: api-test.dev.example.com -> dev-alb-api-dynamic-xxxxxxxxx.ap-northeast-1.elb.amazonaws.com 
+2019-04-08T20:30:15.552Z INFO     [main.py:create_env:573] Successfully finished creating environment dev-dynamic-test 
 ```
 
 #### Delete API (existing env)
-`curl https://eden.example.com/api/v1/delete?name=add-nothing`
+`curl https://eden.example.com/api/v1/delete?name=test&profile=api`
 
 ```
-2019-04-10T23:11:38.515Z INFO     [main.py:check_record:495] Checking if record api-add-nothing.dev.example.com. exists in zone Zxxxxxxxxxxxx 
-2019-04-10T23:11:38.752Z INFO     [main.py:check_record:506] Found existing record api-add-nothing.dev.example.com. in zone Zxxxxxxxxxxxx 
-2019-04-10T23:11:38.996Z INFO     [main.py:delete_cname_record:596] Successfully removed CNAME record api-add-nothing.dev.example.com 
-2019-04-10T23:11:39.245Z INFO     [main.py:delete_env:665] ECS Service dev-dynamic-add-nothing exists, will delete 
-2019-04-10T23:11:39.401Z INFO     [main.py:delete_env:670] Successfully deleted service dev-dynamic-add-nothing from cluster dev 
-2019-04-10T23:11:39.573Z INFO     [main.py:delete_alb_host_listener_rule:397] ELBv2 listener rule for target group arn:aws:elasticloadbalancing:ap-northeast-1:xxxxxxxxxxxx:targetgroup/dev-dynamic-add-nothing/xxxxxxxx and host api-add-nothing.dev.example.com found, will delete 
-2019-04-10T23:11:40.483Z INFO     [main.py:delete_env:697] Deleted all task definitions for family: dev-dynamic-add-nothing, 5 tasks deleted total 
-2019-04-10T23:11:40.483Z INFO     [main.py:delete_env:700] Successfully finished deleting environment dev-dynamic-add-nothing 
+2019-04-10T23:11:38.515Z INFO     [main.py:check_record:495] Checking if record api-test.dev.example.com. exists in zone Zxxxxxxxxxxxx 
+2019-04-10T23:11:38.752Z INFO     [main.py:check_record:506] Found existing record api-test.dev.example.com. in zone Zxxxxxxxxxxxx 
+2019-04-10T23:11:38.996Z INFO     [main.py:delete_cname_record:596] Successfully removed CNAME record api-test.dev.example.com 
+2019-04-10T23:11:39.245Z INFO     [main.py:delete_env:665] ECS Service dev-dynamic-test exists, will delete 
+2019-04-10T23:11:39.401Z INFO     [main.py:delete_env:670] Successfully deleted service dev-dynamic-test from cluster dev 
+2019-04-10T23:11:39.573Z INFO     [main.py:delete_alb_host_listener_rule:397] ELBv2 listener rule for target group arn:aws:elasticloadbalancing:ap-northeast-1:xxxxxxxxxxxx:targetgroup/dev-dynamic-test/xxxxxxxx and host api-test.dev.example.com found, will delete 
+2019-04-10T23:11:40.483Z INFO     [main.py:delete_env:697] Deleted all task definitions for family: dev-dynamic-test, 5 tasks deleted total 
+2019-04-10T23:11:40.483Z INFO     [main.py:delete_env:700] Successfully finished deleting environment dev-dynamic-test 
 ```
 
 #### Delete API (non-existent env)
-`curl https://eden.example.com/api/v1/delete?name=add-nothing`
+`curl https://eden.example.com/api/v1/delete?name=test&profile=api`
 
 ```
-2019-04-10T23:14:46.216Z INFO     [main.py:check_record:495] Checking if record api-add-nothing.dev.example.com. exists in zone Zxxxxxxxxxxxx 
-2019-04-10T23:14:46.514Z INFO     [main.py:delete_cname_record:600] CNAME record for api-add-nothing.dev.example.com does not exist, skipping deletion 
-2019-04-10T23:14:46.872Z INFO     [main.py:delete_env:662] ECS Service dev-dynamic-add-nothing not found, skipping deletion 
-2019-04-10T23:14:46.923Z INFO     [main.py:delete_env:691] Target group dev-dynamic-add-nothing not found, skipping deletion of listener rule and target group 
-2019-04-10T23:14:46.991Z INFO     [main.py:delete_env:697] Deleted all task definitions for family: dev-dynamic-add-nothing, 0 tasks deleted total 
-2019-04-10T23:14:46.991Z INFO     [main.py:delete_env:700] Successfully finished deleting environment dev-dynamic-add-nothing 
+2019-04-10T23:14:46.216Z INFO     [main.py:check_record:495] Checking if record api-test.dev.example.com. exists in zone Zxxxxxxxxxxxx 
+2019-04-10T23:14:46.514Z INFO     [main.py:delete_cname_record:600] CNAME record for api-test.dev.example.com does not exist, skipping deletion 
+2019-04-10T23:14:46.872Z INFO     [main.py:delete_env:662] ECS Service dev-dynamic-test not found, skipping deletion 
+2019-04-10T23:14:46.923Z INFO     [main.py:delete_env:691] Target group dev-dynamic-test not found, skipping deletion of listener rule and target group 
+2019-04-10T23:14:46.991Z INFO     [main.py:delete_env:697] Deleted all task definitions for family: dev-dynamic-test, 0 tasks deleted total 
+2019-04-10T23:14:46.991Z INFO     [main.py:delete_env:700] Successfully finished deleting environment dev-dynamic-test 
 ```
 
 ### Version pinning
