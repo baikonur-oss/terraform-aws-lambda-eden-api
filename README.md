@@ -20,10 +20,10 @@ For CLI flavor, see aws-eden-cli at [GitHub](https://github.com/baikonur-oss/aws
 ```HCL
 module "eden" {
   source  = "baikonur-oss/lambda-eden-api/aws"
-  version = "0.1.0"
+  version = "0.2.0"
 
-  lambda_package_url = "https://github.com/baikonur-oss/terraform-aws-lambda-eden-api/releases/download/v0.1.0/lambda_package.zip"
-  name                  = "dev-api-eden"
+  lambda_package_url = "https://github.com/baikonur-oss/terraform-aws-lambda-eden-api/releases/download/v0.2.0/lambda_package.zip"
+  name                  = "eden"
 
   # eden API ALB variables
   api_subnet_ids              = ["subnet-0123456", "subnet-0123457"]
@@ -34,29 +34,15 @@ module "eden" {
   api_access_logs_bucket_name = "${data.aws_s3_bucket.logs.bucket}"
   api_access_logs_prefix      = "alb/accesslogs-${local.name}-eden-api"
 
-  # config file location
   config_bucket_name = "somebucket"
-  config_key_name    = "config.json"
 
-  # config values
-  config_env_type    = "dev"
-  config_update_key  = "api_endpoint"
-  config_name_prefix = "dev-dynamic"
-
-  # dynamic resource template, parameters, name prefixes
-  name_prefix           = "dev-dynamic"
-  domain_name_prefix    = "api"
-  cluster_name          = "dev"
-  reference_service_arn = "${data.aws_ecs_service.ref.arn}"
-  
-  # common ALB
-  dynamic_alb_arn       = "${data.aws_lb.dynamic.arn}"
-  dynamic_domain_name   = "${data.aws_route53_zone.dynamic.name}"
   dynamic_zone_id       = "${data.aws_route53_zone.dynamic.zone_id}"
 }
 ```
 
 Warning: DynamoDB table for state management is created by aws-eden-cli. Make sure to run `eden config --push` with success at least once before terraform apply. Default table name is `eden`.
+
+With multiple profiles, one eden API instance is enough for one account/region. Refer to aws-eden-cli examples for more details.
 
 ### Example
 #### Create API
