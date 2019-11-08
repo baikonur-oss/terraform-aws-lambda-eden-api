@@ -1,13 +1,15 @@
 # ECS Dynamic Environment Manager (eden) API 
 
-Terraform module for Dynamic Environment Manager (eden) API
+Terraform module for Amazon ECS Dynamic Environment Manager (eden) API
 
-Clone ECS environments easily. 
-Provide eden with a sample ECS service and eden will clone it.
+Clone Amazon ECS environments easily. 
+Provide eden IP with a reference ECS service and eden will create/delete clones.
 
 eden is provided in CLI and Terraform module (Lambda with HTTP API) flavors. 
 You can use HTTP API from CI of your choice on Pull Request open/close, 
 new commit pushes to fully automate environment creation. 
+eden API is fast - both create and delete commands usually take no more than 5 seconds.
+
 For CLI flavor, see aws-eden-cli at [GitHub](https://github.com/baikonur-oss/aws-eden-cli).
 
 ![terraform v0.11.x](https://img.shields.io/badge/terraform-v0.11.x-brightgreen.svg)
