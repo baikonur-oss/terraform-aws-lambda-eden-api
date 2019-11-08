@@ -46,9 +46,29 @@ Warning: DynamoDB table for state management is created by aws-eden-cli. Make su
 
 With multiple profiles, one eden API instance is enough for one account/region. Refer to aws-eden-cli examples for more details.
 
+### eden API
+eden has only two API commands: create and delete.
+
+#### `GET /api/v1/create`
+Required query parameters:
+- name: environment name 
+- image_uri: ECR image URI to deploy, must be already pushed and must be in the same account (eden API will check for image availability before deploying)
+
+Optional query parameters:
+- profile: default value = "default". eden profile to use. Profiles include all settings necessary. Profiles can be created with `eden config --push` command. Refer to aws-eden-cli examples for more details.
+
+#### `GET /api/v1/delete`
+Required query parameters:
+- name: environment name 
+
+Optional query parameters:
+- profile: default value = "default". eden profile to use. Profiles include all settings necessary. Profiles can be created with `eden config --push` command. Refer to aws-eden-cli examples for more details.
+
+ 
+
 ### Example
 #### Create API
-`curl https://eden.example.com/api/v1/create?name=test-create&cirn=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest&profile=api`
+`curl https://eden.example.com/api/v1/create?name=test-create&image_uri=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest&profile=api`
 
 ```
 2019-04-08T20:32:05.151Z INFO     [main.py:check_cirn:382] Checking if image xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest exists 
@@ -66,7 +86,7 @@ With multiple profiles, one eden API instance is enough for one account/region. 
 2019-04-08T20:32:08.134Z INFO     [main.py:create_env:573] Successfully finished creating environment dev-dynamic-test-create 
 ```
 #### Create API on existing env
-`curl https://eden.example.com/api/v1/create?name=test&cirn=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest&profile=api`
+`curl https://eden.example.com/api/v1/create?name=test&image_uri=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest&profile=api`
 
 ```
 2019-04-08T20:30:13.491Z INFO     [main.py:check_cirn:382] Checking if image xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest exists 
