@@ -157,7 +157,6 @@ For more information on module version pinning, see [Selecting a Revision](https
 | api\_security\_group\_ids | List of security group IDs for eden API ALB to use | list | n/a | yes |
 | api\_subnet\_ids | List of subnet IDs for eden API ALB to use | list | n/a | yes |
 | api\_zone\_id | Route 53 Zone ID for eden API ALB | string | n/a | yes |
-| batch\_size | Maximum number of records passed for a single Lambda invocation | string | n/a | yes |
 | config\_bucket\_name | S3 bucket name containing Config JSON file | string | n/a | yes |
 | count |  | string | `"1"` | no |
 | dynamic\_zone\_id | Route 53 Zone ID of zone to use to create dynamic environments | string | n/a | yes |

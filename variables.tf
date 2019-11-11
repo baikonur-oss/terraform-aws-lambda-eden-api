@@ -14,10 +14,6 @@ variable "timeout" {
   default     = 60
 }
 
-variable "batch_size" {
-  description = "Maximum number of records passed for a single Lambda invocation"
-}
-
 variable "lambda_package_url" {
   description = "Lambda package URL (see Usage in README)"
 }
