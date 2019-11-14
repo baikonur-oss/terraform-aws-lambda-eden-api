@@ -14,10 +14,6 @@ variable "timeout" {
   default     = 60
 }
 
-variable "batch_size" {
-  description = "Maximum number of records passed for a single Lambda invocation"
-}
-
 variable "lambda_package_url" {
   description = "Lambda package URL (see Usage in README)"
 }
@@ -48,8 +44,9 @@ variable "tags" {
   default     = {}
 }
 
-variable "name_prefix" {
-  description = "Prefix to use in names for resources created by eden"
+variable "eden_table" {
+  description = "eden DynamoDB table name for profiles and envs"
+  default     = "eden"
 }
 
 ## alb
@@ -90,26 +87,6 @@ variable "config_bucket_name" {
   description = "S3 bucket name containing Config JSON file"
 }
 
-variable "config_key_name" {
-  description = "Config JSON file key"
-}
-
-variable "config_update_key" {
-  description = "Key to put DNS hostnames created by eden to in Config JSON file"
-}
-
-variable "config_env_type" {
-  description = "Static string to put for env key in Config JSON file (e.g. dev/stg/prd)"
-}
-
-variable "config_name_prefix" {
-  description = "Prefix for environment name in Config JSON file"
-}
-
-variable "reference_service_arn" {
-  description = "Reference ECS Service ARN"
-}
-
 ### route53
 
 variable "api_zone_id" {
@@ -122,22 +99,6 @@ variable "api_domain_name" {
 
 variable "dynamic_zone_id" {
   description = "Route 53 Zone ID of zone to use to create dynamic environments"
-}
-
-variable "dynamic_domain_name" {
-  description = "Route 53 Zone name to use to create dynamic environments"
-}
-
-variable "dynamic_alb_arn" {
-  description = "ARN of dynamic environment common ALB"
-}
-
-variable "domain_name_prefix" {
-  description = "Prefix for domain names created by eden"
-}
-
-variable "cluster_name" {
-  description = "ECS Cluster name (must include reference_service_arn)"
 }
 
 variable "log_retention_in_days" {
