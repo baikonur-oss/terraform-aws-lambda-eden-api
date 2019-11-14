@@ -144,7 +144,7 @@ def delete_env():
             'errors': f"Exception caught",
         }), 501
 
-    table = boto3.resource('dynamodb').Table(table_name)
+    table = dynamodb_resource.Table(table_name)
     table.delete_item(
         Key={
             'env_name': f"{g.profile}${r['name']}",
