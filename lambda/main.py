@@ -15,7 +15,9 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.info('Loading eden_core')
 
-dynamodb = boto3.client('dynamodb')
+dynamodb_client = boto3.client('dynamodb')
+dynamodb_resource = boto3.resource('dynamodb')
+
 route53 = boto3.client('route53')
 ecr = boto3.client('ecr')
 ecs = boto3.client('ecs')
@@ -35,7 +37,7 @@ def configure():
         g.profile = request.args['profile']
 
     try:
-        response = dynamodb.describe_table(TableName=table_name)
+        response = dynamodb_client.describe_table(TableName=table_name)
         table_status = response['Table']['TableStatus']
     except Exception as e:
         if hasattr(e, 'response') and 'Error' in e.response:
@@ -57,7 +59,7 @@ def configure():
                     'errors': f"Table {table_name} status is \"{table_status}\", try again later",
                 }), 501
 
-    r = dynamodb.get_item(
+    r = dynamodb_client.get_item(
         TableName=table_name,
         Key={
             'env_name': {
@@ -108,7 +110,7 @@ def create_env():
             'errors': f"Exception caught",
         }), 501
 
-    table = boto3.resource('dynamodb').Table(table_name)
+    table = dynamodb_resource.Table(table_name)
     table.put_item(
         Item={
             'env_name': f"{g.profile}${r['name']}",
