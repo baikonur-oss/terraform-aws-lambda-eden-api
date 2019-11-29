@@ -82,13 +82,11 @@ variable "api_acm_certificate_arn" {
 }
 
 ## s3 bucket
-
 variable "config_bucket_name" {
   description = "S3 bucket name containing Config JSON file"
 }
 
 ### route53
-
 variable "api_zone_id" {
   description = "Route 53 Zone ID for eden API ALB"
 }

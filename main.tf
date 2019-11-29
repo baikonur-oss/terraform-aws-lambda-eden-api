@@ -95,16 +95,9 @@ module "iam" {
                 "dynamodb:*"
             ],
             "Resource": [
-                "${data.aws_dynamodb_table.eden.arn}"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "ecs:*"
-            ],
-            "Resource": [
-                "arn:aws:ecs:*"
+                "${data.aws_dynamodb_table.eden.arn}",
+                "${data.aws_dynamodb_table.eden.arn}/*",
+                "${data.aws_dynamodb_table.eden.arn}/index/*",
             ]
         },
         {
