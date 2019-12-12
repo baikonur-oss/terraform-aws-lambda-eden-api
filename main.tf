@@ -3,7 +3,7 @@ locals {
 }
 
 data "aws_dynamodb_table" "eden" {
-  name = "${var.eden_table}"
+  name = var.eden_table
 }
 
 data "external" "package" {
@@ -13,17 +13,17 @@ data "external" "package" {
 resource "aws_cloudwatch_log_group" "logs" {
   name = "/aws/lambda/${var.name}"
 
-  retention_in_days = "${var.log_retention_in_days}"
+  retention_in_days = var.log_retention_in_days
 }
 
 # Lambda
 resource "aws_lambda_function" "function" {
-  function_name = "${var.name}"
-  handler       = "${var.handler}"
-  role          = "${module.iam.arn}"
-  runtime       = "${var.runtime}"
-  memory_size   = "${var.memory}"
-  timeout       = "${var.timeout}"
+  function_name = var.name
+  handler       = var.handler
+  role          = module.iam.arn
+  runtime       = var.runtime
+  memory_size   = var.memory
+  timeout       = var.timeout
 
   # Below is a very dirty hack to force base64sha256 to wait until
   # package download in data.external.package finishes.
@@ -31,28 +31,29 @@ resource "aws_lambda_function" "function" {
   # WARNING: explicit depends_on from this resource to data.external.package
   # does not help
 
-  filename = "${local.package_filename}"
+  filename = local.package_filename
 
-  source_code_hash = "${base64sha256(file("${jsonencode(data.external.package.result) == "{}" ? local.package_filename : ""}"))}"
+  source_code_hash = filebase64sha256(
+    jsonencode(data.external.package.result) == "{}" ? local.package_filename : "",
+  )
 
   tracing_config {
-    mode = "${var.tracing_mode}"
+    mode = var.tracing_mode
   }
 
   environment {
-    variables {
-      TZ         = "${var.timezone}"
-      EDEN_TABLE = "${var.eden_table}"
+    variables = {
+      TZ         = var.timezone
+      EDEN_TABLE = var.eden_table
     }
   }
 
-  tags = "${var.tags}"
-
+  tags = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "xray_access" {
   policy_arn = "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
-  role       = "${module.iam.name}"
+  role       = module.iam.name
 }
 
 module "iam" {
@@ -60,7 +61,7 @@ module "iam" {
   version = "1.0.1"
 
   type = "lambda"
-  name = "${var.name}"
+  name = var.name
 
   policy_json = <<EOF
 {
@@ -94,16 +95,9 @@ module "iam" {
                 "dynamodb:*"
             ],
             "Resource": [
-                "${data.aws_dynamodb_table.eden.arn}"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "ecs:*"
-            ],
-            "Resource": [
-                "arn:aws:ecs:*"
+                "${data.aws_dynamodb_table.eden.arn}",
+                "${data.aws_dynamodb_table.eden.arn}/*",
+                "${data.aws_dynamodb_table.eden.arn}/index/*",
             ]
         },
         {
@@ -162,39 +156,40 @@ module "iam" {
    ]
 }
 EOF
+
 }
 
 # alb
 resource "aws_alb" "alb" {
-  count                      = "${var.count}"
-  name                       = "${var.name}"
-  internal                   = "${var.internal}"
-  security_groups            = ["${var.api_security_group_ids}"]
-  subnets                    = ["${var.api_subnet_ids}"]
+  count                      = var.count
+  name                       = var.name
+  internal                   = var.internal
+  security_groups            = var.api_security_group_ids
+  subnets                    = var.api_subnet_ids
   enable_deletion_protection = true
-  tags                       = "${var.tags}"
+  tags                       = var.tags
 
   access_logs {
     enabled = true
-    bucket  = "${var.api_access_logs_bucket_name}"
-    prefix  = "${var.api_access_logs_prefix}"
+    bucket  = var.api_access_logs_bucket_name
+    prefix  = var.api_access_logs_prefix
   }
 }
 
 resource "aws_route53_record" "route53_record" {
-  zone_id = "${var.api_zone_id}"
-  name    = "${var.api_domain_name}"
+  zone_id = var.api_zone_id
+  name    = var.api_domain_name
   type    = "A"
 
   alias {
-    name                   = "${aws_alb.alb.dns_name}"
-    zone_id                = "${aws_alb.alb.zone_id}"
+    name                   = aws_alb.alb[0].dns_name
+    zone_id                = aws_alb.alb[0].zone_id
     evaluate_target_health = false
   }
 }
 
 resource "aws_alb_listener" "HTTP_redirect" {
-  load_balancer_arn = "${aws_alb.alb.arn}"
+  load_balancer_arn = aws_alb.alb[0].arn
   port              = "80"
   protocol          = "HTTP"
 
@@ -210,34 +205,35 @@ resource "aws_alb_listener" "HTTP_redirect" {
 }
 
 resource "aws_alb_listener" "listener" {
-  load_balancer_arn = "${aws_alb.alb.arn}"
+  load_balancer_arn = aws_alb.alb[0].arn
   protocol          = "HTTPS"
   port              = 443
   ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
 
-  certificate_arn = "${var.api_acm_certificate_arn}"
+  certificate_arn = var.api_acm_certificate_arn
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.role.arn}"
+    target_group_arn = aws_lb_target_group.role.arn
     type             = "forward"
   }
 }
 
 resource "aws_lb_target_group" "role" {
-  name        = "${var.name}"
+  name        = var.name
   target_type = "lambda"
 }
 
 resource "aws_lambda_permission" "with_lb" {
   statement_id  = "AllowExecutionFromlb"
   action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.function.arn}"
+  function_name = aws_lambda_function.function.arn
   principal     = "elasticloadbalancing.amazonaws.com"
-  source_arn    = "${aws_lb_target_group.role.arn}"
+  source_arn    = aws_lb_target_group.role.arn
 }
 
 resource "aws_lb_target_group_attachment" "test" {
-  target_group_arn = "${aws_lb_target_group.role.arn}"
-  target_id        = "${aws_lambda_function.function.arn}"
-  depends_on       = ["aws_lambda_permission.with_lb"]
+  target_group_arn = aws_lb_target_group.role.arn
+  target_id        = aws_lambda_function.function.arn
+  depends_on       = [aws_lambda_permission.with_lb]
 }
+

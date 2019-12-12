@@ -40,7 +40,7 @@ variable "tracing_mode" {
 
 variable "tags" {
   description = "Resource tags"
-  type        = "map"
+  type        = map(string)
   default     = {}
 }
 
@@ -61,12 +61,12 @@ variable "count" {
 
 variable "api_subnet_ids" {
   description = "List of subnet IDs for eden API ALB to use"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "api_security_group_ids" {
   description = "List of security group IDs for eden API ALB to use"
-  type        = "list"
+  type        = list(string)
 }
 
 variable "api_access_logs_bucket_name" {
@@ -82,13 +82,11 @@ variable "api_acm_certificate_arn" {
 }
 
 ## s3 bucket
-
 variable "config_bucket_name" {
   description = "S3 bucket name containing Config JSON file"
 }
 
 ### route53
-
 variable "api_zone_id" {
   description = "Route 53 Zone ID for eden API ALB"
 }
@@ -105,3 +103,4 @@ variable "log_retention_in_days" {
   description = "eden API Lambda Function log retention in days"
   default     = 30
 }
+
