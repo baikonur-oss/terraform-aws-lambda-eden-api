@@ -113,10 +113,10 @@ def create_env():
     table = dynamodb_resource.Table(table_name)
     table.put_item(
         Item={
-            'env_name': f"{g.profile}${r['name']}",
+            'type': g.profile,
+            'name': r['name'],
             'last_updated_time': str(datetime.datetime.now().timestamp()),
             'endpoint': r['cname'],
-            'name': r['name'],
         }
     )
 
@@ -147,7 +147,8 @@ def delete_env():
     table = dynamodb_resource.Table(table_name)
     table.delete_item(
         Key={
-            'env_name': f"{g.profile}${r['name']}",
+            'type': g.profile,
+            'name': r['name'],
         },
     )
 
