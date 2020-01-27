@@ -62,24 +62,6 @@ variable "count" {
   default = 1
 }
 
-variable "api_subnet_ids" {
-  description = "List of subnet IDs for eden API ALB to use"
-  type        = list(string)
-}
-
-variable "api_security_group_ids" {
-  description = "List of security group IDs for eden API ALB to use"
-  type        = list(string)
-}
-
-variable "api_access_logs_bucket_name" {
-  description = "S3 bucket name for saving eden API access logs"
-}
-
-variable "api_access_logs_prefix" {
-  description = "Path prefix for eden API access logs"
-}
-
 variable "api_acm_certificate_arn" {
   description = "ACM certificate ARN for eden API ALB"
 }

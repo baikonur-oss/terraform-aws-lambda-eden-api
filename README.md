@@ -18,7 +18,7 @@ For CLI flavor, see aws-eden-cli at [GitHub](https://github.com/baikonur-oss/aws
 
 ![simple-figure](figures/aws-eden-simple-en.png)
 
-## Usage (API interface)
+## Usage (API intergface)
 ```HCL
 module "eden" {
   source  = "baikonur-oss/lambda-eden-api/aws"
@@ -28,15 +28,11 @@ module "eden" {
   name                  = "eden"
 
   # eden API ALB variables
-  api_subnet_ids              = ["subnet-0123456", "subnet-0123457"]
-  api_security_group_ids      = ["sg-xxxxxxx"]
   api_acm_certificate_arn     = "${data.aws_acm_certificate.wildcard.arn}"
   api_domain_name             = "${var.env}-eden.${data.aws_route53_zone.main.name}"
   api_zone_id                 = "${data.aws_route53_zone.main.zone_id}"
-  api_access_logs_bucket_name = "${data.aws_s3_bucket.logs.bucket}"
-  api_access_logs_prefix      = "alb/accesslogs-${local.name}-eden-api"
 
-  config_bucket_name = "somebucket"
+  endpoints_bucket_name = "somebucket"
 
   dynamic_zone_id       = "${data.aws_route53_zone.dynamic.zone_id}"
 }
