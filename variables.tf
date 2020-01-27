@@ -1,3 +1,6 @@
+variable "region" {
+}
+
 # Lambda
 variable "timezone" {
   description = "tz database timezone name (e.g. Asia/Tokyo)"
@@ -82,8 +85,8 @@ variable "api_acm_certificate_arn" {
 }
 
 ## s3 bucket
-variable "config_bucket_name" {
-  description = "S3 bucket name containing Config JSON file"
+variable "endpoints_bucket_name" {
+  description = "S3 bucket name containing endpoints JSON file"
 }
 
 ### route53
@@ -96,7 +99,7 @@ variable "api_domain_name" {
 }
 
 variable "dynamic_zone_id" {
-  description = "Route 53 Zone ID of zone to use to create dynamic environments"
+  description = "Route 53 Zone ID of zone to use to create environments"
 }
 
 variable "log_retention_in_days" {

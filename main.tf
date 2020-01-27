@@ -2,6 +2,8 @@ locals {
   package_filename = "${path.module}/package.zip"
 }
 
+data "aws_caller_identity" "self" {}
+
 data "aws_dynamodb_table" "eden" {
   name = var.eden_table
 }
@@ -58,7 +60,7 @@ resource "aws_iam_role_policy_attachment" "xray_access" {
 
 module "iam" {
   source  = "baikonur-oss/iam-nofile/aws"
-  version = "1.0.1"
+  version = "v2.0.0"
 
   type = "lambda"
   name = var.name
@@ -70,7 +72,6 @@ module "iam" {
         {
             "Effect": "Allow",
             "Action": [
-                "logs:CreateLogGroup",
                 "logs:CreateLogStream",
                 "logs:DescribeLogGroups",
                 "logs:DescribeLogStreams",
@@ -107,7 +108,7 @@ module "iam" {
                 "s3:PutObject"
             ],
             "Resource": [
-                "arn:aws:s3:::${var.config_bucket_name}/*"
+                "arn:aws:s3:::${var.endpoints_bucket_name}/*"
             ]
         },
         {
@@ -159,81 +160,72 @@ EOF
 
 }
 
-# alb
-resource "aws_alb" "alb" {
-  count                      = var.count
-  name                       = var.name
-  internal                   = var.internal
-  security_groups            = var.api_security_group_ids
-  subnets                    = var.api_subnet_ids
-  enable_deletion_protection = true
-  tags                       = var.tags
+resource "aws_api_gateway_rest_api" "api" {
+  name = var.name
+  description = "eden API managed by Terraform"
+}
 
-  access_logs {
-    enabled = true
-    bucket  = var.api_access_logs_bucket_name
-    prefix  = var.api_access_logs_prefix
+resource "aws_api_gateway_resource" "api" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
+  path_part   = "api"
+}
+
+resource "aws_api_gateway_resource" "v1" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_resource.api.id
+  path_part   = "v1"
+}
+
+### GET create API
+module "create" {
+  source = "./modules/lambda_resource_handler"
+  region = var.region
+
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_resource.v1.id
+  path_part   = "create"
+
+  lambda_function_name = aws_lambda_function.function.function_name
+  lambda_invoke_arn    = aws_lambda_function.function.invoke_arn
+}
+
+### GET delete API
+module "delete" {
+  source = "./modules/lambda_resource_handler"
+  region = var.region
+
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_resource.v1.id
+  path_part   = "delete"
+
+  lambda_function_name = aws_lambda_function.function.function_name
+  lambda_invoke_arn    = aws_lambda_function.function.invoke_arn
+}
+
+## Stages
+resource "aws_api_gateway_deployment" "main" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  stage_name = "main"
+}
+
+### Usage plans and keys
+resource "aws_api_gateway_usage_plan" "std" {
+  name         = "eden-std-plan"
+  description  = "eden standard usage plan"
+
+  api_stages {
+    api_id = aws_api_gateway_rest_api.api.id
+    stage  = aws_api_gateway_deployment.main.stage_name
   }
 }
 
-resource "aws_route53_record" "route53_record" {
-  zone_id = var.api_zone_id
-  name    = var.api_domain_name
-  type    = "A"
-
-  alias {
-    name                   = aws_alb.alb[0].dns_name
-    zone_id                = aws_alb.alb[0].zone_id
-    evaluate_target_health = false
-  }
+resource "aws_api_gateway_api_key" "std" {
+  name = "eden-std-key"
 }
 
-resource "aws_alb_listener" "HTTP_redirect" {
-  load_balancer_arn = aws_alb.alb[0].arn
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    type = "redirect"
-
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
-  }
+resource "aws_api_gateway_usage_plan_key" "main" {
+  key_id        = aws_api_gateway_api_key.std.id
+  key_type      = "API_KEY"
+  usage_plan_id = aws_api_gateway_usage_plan.std.id
 }
-
-resource "aws_alb_listener" "listener" {
-  load_balancer_arn = aws_alb.alb[0].arn
-  protocol          = "HTTPS"
-  port              = 443
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
-
-  certificate_arn = var.api_acm_certificate_arn
-
-  default_action {
-    target_group_arn = aws_lb_target_group.role.arn
-    type             = "forward"
-  }
-}
-
-resource "aws_lb_target_group" "role" {
-  name        = var.name
-  target_type = "lambda"
-}
-
-resource "aws_lambda_permission" "with_lb" {
-  statement_id  = "AllowExecutionFromlb"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.function.arn
-  principal     = "elasticloadbalancing.amazonaws.com"
-  source_arn    = aws_lb_target_group.role.arn
-}
-
-resource "aws_lb_target_group_attachment" "test" {
-  target_group_arn = aws_lb_target_group.role.arn
-  target_id        = aws_lambda_function.function.arn
-  depends_on       = [aws_lambda_permission.with_lb]
-}
-
