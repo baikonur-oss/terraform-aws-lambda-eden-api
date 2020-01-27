@@ -146,25 +146,22 @@ For more information on module version pinning, see [Selecting a Revision](https
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| api\_access\_logs\_bucket\_name | S3 bucket name for saving eden API access logs | string | n/a | yes |
-| api\_access\_logs\_prefix | Path prefix for eden API access logs | string | n/a | yes |
 | api\_acm\_certificate\_arn | ACM certificate ARN for eden API ALB | string | n/a | yes |
 | api\_domain\_name | eden API domain name | string | n/a | yes |
-| api\_security\_group\_ids | List of security group IDs for eden API ALB to use | list | n/a | yes |
-| api\_subnet\_ids | List of subnet IDs for eden API ALB to use | list | n/a | yes |
 | api\_zone\_id | Route 53 Zone ID for eden API ALB | string | n/a | yes |
-| config\_bucket\_name | S3 bucket name containing Config JSON file | string | n/a | yes |
 | count |  | string | `"1"` | no |
-| dynamic\_zone\_id | Route 53 Zone ID of zone to use to create dynamic environments | string | n/a | yes |
+| dynamic\_zone\_id | Route 53 Zone ID of zone to use to create environments | string | n/a | yes |
 | eden\_table | eden DynamoDB table name for profiles and envs | string | `"eden"` | no |
+| endpoints\_bucket\_name | S3 bucket name containing endpoints JSON file | string | n/a | yes |
 | handler | Lambda Function handler (entrypoint) | string | `"main.lambda_handler"` | no |
 | internal | Should eden API ALB be internal? | string | `"false"` | no |
 | lambda\_package\_url | Lambda package URL (see Usage in README) | string | n/a | yes |
 | log\_retention\_in\_days | eden API Lambda Function log retention in days | string | `"30"` | no |
 | memory | Lambda Function memory in megabytes | string | `"256"` | no |
 | name | Resource name | string | `"env_manager"` | no |
+| region |  | string | n/a | yes |
 | runtime | Lambda Function runtime | string | `"python3.7"` | no |
-| tags | Resource tags | map | `<map>` | no |
+| tags | Resource tags | map(string) | `{}` | no |
 | timeout | Lambda Function timeout in seconds | string | `"60"` | no |
 | timezone | tz database timezone name (e.g. Asia/Tokyo) | string | `"UTC"` | no |
 | tracing\_mode | X-Ray tracing mode (see: https://docs.aws.amazon.com/lambda/latest/dg/API_TracingConfig.html ) | string | `"PassThrough"` | no |

@@ -161,7 +161,7 @@ EOF
 }
 
 resource "aws_api_gateway_rest_api" "api" {
-  name = var.name
+  name        = var.name
   description = "eden API managed by Terraform"
 }
 
@@ -227,13 +227,13 @@ module "delete" {
 ## Stages
 resource "aws_api_gateway_deployment" "main" {
   rest_api_id = aws_api_gateway_rest_api.api.id
-  stage_name = "main"
+  stage_name  = "main"
 }
 
 ### Usage plans and keys
 resource "aws_api_gateway_usage_plan" "std" {
-  name         = "eden-std-plan"
-  description  = "eden standard usage plan"
+  name        = "eden-std-plan"
+  description = "eden standard usage plan"
 
   api_stages {
     api_id = aws_api_gateway_rest_api.api.id

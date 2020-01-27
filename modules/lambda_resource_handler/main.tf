@@ -7,9 +7,9 @@ resource "aws_api_gateway_resource" "create" {
 }
 
 resource "aws_api_gateway_method" "create_get" {
-  rest_api_id = var.rest_api_id
-  resource_id = aws_api_gateway_resource.create.id
-  http_method = var.http_method
+  rest_api_id   = var.rest_api_id
+  resource_id   = aws_api_gateway_resource.create.id
+  http_method   = var.http_method
   authorization = var.authorization
 
   api_key_required = var.api_key_required
