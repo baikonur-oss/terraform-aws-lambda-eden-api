@@ -98,7 +98,7 @@ module "iam" {
             "Resource": [
                 "${data.aws_dynamodb_table.eden.arn}",
                 "${data.aws_dynamodb_table.eden.arn}/*",
-                "${data.aws_dynamodb_table.eden.arn}/index/*",
+                "${data.aws_dynamodb_table.eden.arn}/index/*"
             ]
         },
         {
