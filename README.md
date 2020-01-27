@@ -156,7 +156,7 @@ For more information on module version pinning, see [Selecting a Revision](https
 | lambda\_package\_url | Lambda package URL (see Usage in README) | string | n/a | yes |
 | log\_retention\_in\_days | eden API Lambda Function log retention in days | string | `"30"` | no |
 | memory | Lambda Function memory in megabytes | string | `"256"` | no |
-| name | Resource name | string | `"env_manager"` | no |
+| name | Resource name | string | `"eden"` | no |
 | region |  | string | n/a | yes |
 | runtime | Lambda Function runtime | string | `"python3.7"` | no |
 | tags | Resource tags | map(string) | `{}` | no |

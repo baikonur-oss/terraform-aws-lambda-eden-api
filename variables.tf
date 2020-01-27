@@ -33,7 +33,7 @@ variable "runtime" {
 
 variable "name" {
   description = "Resource name"
-  default     = "env_manager"
+  default     = "eden"
 }
 
 variable "tracing_mode" {
