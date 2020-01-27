@@ -52,16 +52,6 @@ variable "eden_table" {
   default     = "eden"
 }
 
-## alb
-variable "internal" {
-  description = "Should eden API ALB be internal?"
-  default     = false
-}
-
-variable "count" {
-  default = 1
-}
-
 variable "api_acm_certificate_arn" {
   description = "ACM certificate ARN for eden API ALB"
 }

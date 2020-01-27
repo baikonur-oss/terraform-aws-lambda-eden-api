@@ -149,12 +149,10 @@ For more information on module version pinning, see [Selecting a Revision](https
 | api\_acm\_certificate\_arn | ACM certificate ARN for eden API ALB | string | n/a | yes |
 | api\_domain\_name | eden API domain name | string | n/a | yes |
 | api\_zone\_id | Route 53 Zone ID for eden API ALB | string | n/a | yes |
-| count |  | string | `"1"` | no |
 | dynamic\_zone\_id | Route 53 Zone ID of zone to use to create environments | string | n/a | yes |
 | eden\_table | eden DynamoDB table name for profiles and envs | string | `"eden"` | no |
 | endpoints\_bucket\_name | S3 bucket name containing endpoints JSON file | string | n/a | yes |
 | handler | Lambda Function handler (entrypoint) | string | `"main.lambda_handler"` | no |
-| internal | Should eden API ALB be internal? | string | `"false"` | no |
 | lambda\_package\_url | Lambda package URL (see Usage in README) | string | n/a | yes |
 | log\_retention\_in\_days | eden API Lambda Function log retention in days | string | `"30"` | no |
 | memory | Lambda Function memory in megabytes | string | `"256"` | no |
