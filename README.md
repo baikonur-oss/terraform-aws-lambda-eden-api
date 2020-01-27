@@ -18,7 +18,7 @@ For CLI flavor, see aws-eden-cli at [GitHub](https://github.com/baikonur-oss/aws
 
 ![simple-figure](figures/aws-eden-simple-en.png)
 
-## Usage (API intergface)
+## Usage (API interface)
 ```HCL
 module "eden" {
   source  = "baikonur-oss/lambda-eden-api/aws"
