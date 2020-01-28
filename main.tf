@@ -164,6 +164,10 @@ EOF
 resource "aws_api_gateway_rest_api" "api" {
   name        = var.name
   description = "eden API managed by Terraform"
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_domain_name" "eden" {
