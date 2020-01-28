@@ -161,6 +161,8 @@ EOF
 
 }
 
+## API Gateway REST API
+
 resource "aws_api_gateway_rest_api" "api" {
   name        = var.name
   description = "eden API managed by Terraform"
@@ -173,10 +175,17 @@ resource "aws_api_gateway_rest_api" "api" {
 resource "aws_api_gateway_domain_name" "eden" {
   domain_name              = replace(var.api_domain_name, "/[.]$/", "")
   regional_certificate_arn = var.api_acm_certificate_arn
+  security_policy          = "TLS_1_2"
 
   endpoint_configuration {
     types = ["REGIONAL"]
   }
+}
+
+resource "aws_api_gateway_base_path_mapping" "mapping" {
+  api_id      = aws_api_gateway_rest_api.api.id
+  stage_name  = aws_api_gateway_deployment.main.stage_name
+  domain_name = aws_api_gateway_domain_name.eden.domain_name
 }
 
 resource "aws_route53_record" "eden" {
