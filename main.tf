@@ -1,8 +1,9 @@
 locals {
   package_filename = "${path.module}/package.zip"
+  region           = var.region == "default" ? data.aws_region.current.name : var.region
 }
 
-data "aws_caller_identity" "self" {}
+data "aws_region" "current" {}
 
 data "aws_dynamodb_table" "eden" {
   name = var.eden_table
@@ -201,7 +202,7 @@ resource "aws_api_gateway_resource" "v1" {
 ### GET create API
 module "create" {
   source = "./modules/lambda_resource_handler"
-  region = var.region
+  region = local.region
 
   rest_api_id = aws_api_gateway_rest_api.api.id
   parent_id   = aws_api_gateway_resource.v1.id
@@ -214,7 +215,7 @@ module "create" {
 ### GET delete API
 module "delete" {
   source = "./modules/lambda_resource_handler"
-  region = var.region
+  region = local.region
 
   rest_api_id = aws_api_gateway_rest_api.api.id
   parent_id   = aws_api_gateway_resource.v1.id

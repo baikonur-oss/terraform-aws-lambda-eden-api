@@ -157,7 +157,7 @@ For more information on module version pinning, see [Selecting a Revision](https
 | log\_retention\_in\_days | eden API Lambda Function log retention in days | string | `"30"` | no |
 | memory | Lambda Function memory in megabytes | string | `"256"` | no |
 | name | Resource name | string | `"eden"` | no |
-| region |  | string | n/a | yes |
+| region | Region to create API Gateway in. "default" will select provider's cirrent region | string | `"default"` | no |
 | runtime | Lambda Function runtime | string | `"python3.7"` | no |
 | tags | Resource tags | map(string) | `{}` | no |
 | timeout | Lambda Function timeout in seconds | string | `"60"` | no |
