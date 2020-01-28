@@ -166,7 +166,7 @@ resource "aws_api_gateway_rest_api" "api" {
 }
 
 resource "aws_api_gateway_domain_name" "example" {
-  domain_name              = var.api_domain_name
+  domain_name              = replace(var.api_domain_name, "/[.]$/", "")
   regional_certificate_arn = var.api_acm_certificate_arn
 
   endpoint_configuration {
