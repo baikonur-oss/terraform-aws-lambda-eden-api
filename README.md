@@ -5,8 +5,8 @@ Terraform module for Amazon ECS Dynamic Environment Manager (eden) API
 Clone Amazon ECS environments easily. 
 Provide eden IP with a reference ECS service and eden will create/delete clones.
 
-eden is provided in CLI and Terraform module (Lambda with HTTP API) flavors. 
-You can use HTTP API from CI of your choice on Pull Request open/close, 
+eden is provided in CLI and Terraform module (Lambda with API Gateway REST API) flavors. 
+You can use API Gateway REST API from CI of your choice on Pull Request open/close, 
 new commit pushes to fully automate environment creation. 
 eden API is fast - both create and delete commands usually take no more than 5 seconds.
 
@@ -60,11 +60,19 @@ Required query parameters:
 Optional query parameters:
 - profile: default value = "default". eden profile to use. Profiles include all settings necessary. Profiles can be created with `eden config --push` command. Refer to aws-eden-cli examples for more details.
 
+
+### API Keys
+This module creates an API Key for you. You can check it from API Gateway console. You will need to specify this key to access API. 
+
+Key must be provided as an HTTP header:
+```
+x-api-key: YOURAPIKEY
+```
  
 
 ### Example
 #### Create API
-`curl https://eden.example.com/api/v1/create?name=test-create&image_uri=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest&profile=api`
+`curl https://eden.example.com/api/v1/create?name=test-create&image_uri=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest&profile=api -H "x-api-key:YOURAPIKEY"`
 
 ```
 2019-04-08T20:32:05.151Z INFO     [main.py:check_cirn:382] Checking if image xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest exists 
@@ -78,11 +86,11 @@ Optional query parameters:
 2019-04-08T20:32:06.310Z INFO     [main.py:create_alb_host_listener_rule:355] ELBv2 listener rule for target group arn:aws:elasticloadbalancing:ap-northeast-1:xxxxxxxxxxxx:targetgroup/dev-dynamic-test-create/b6918e6e5f10389d and host api-test-create.dev.example.com does not exist, will create new listener rule 
 2019-04-08T20:32:06.361Z INFO     [main.py:create_env:554] ECS Service dev-dynamic-test-create does not exist, will create new service 
 2019-04-08T20:32:07.672Z INFO     [main.py:check_record:414] Checking if record api-test-create.dev.example.com. exists in zone Zxxxxxxxxxxxx 
-2019-04-08T20:32:08.133Z INFO     [main.py:create_cname_record:477] Successfully created CNAME: api-test-create.dev.example.com -> dev-alb-api-dynamic-xxxxxxxxx.ap-northeast-1.elb.amazonaws.com 
+2019-04-08T20:32:08.133Z INFO     [main.py:create_cname_record:477] Successfully created ALIAS: api-test-create.dev.example.com -> dev-alb-api-dynamic-xxxxxxxxx.ap-northeast-1.elb.amazonaws.com 
 2019-04-08T20:32:08.134Z INFO     [main.py:create_env:573] Successfully finished creating environment dev-dynamic-test-create 
 ```
 #### Create API on existing env
-`curl https://eden.example.com/api/v1/create?name=test&image_uri=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest&profile=api`
+`curl https://eden.example.com/api/v1/create?name=test&image_uri=xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest&profile=api -H "x-api-key:YOURAPIKEY"`
 
 ```
 2019-04-08T20:30:13.491Z INFO     [main.py:check_cirn:382] Checking if image xxxxxxxxxxxx.dkr.ecr.ap-northeast-1.amazonaws.com/servicename-api-dev:latest exists 
@@ -98,17 +106,17 @@ Optional query parameters:
 2019-04-08T20:30:14.429Z INFO     [main.py:create_env:549] Successfully deployed task definition arn:aws:ecs:ap-northeast-1:xxxxxxxxxxxx:task-definition/dev-dynamic-test:5 to service dev-dynamic-test in cluster dev 
 2019-04-08T20:30:15.248Z INFO     [main.py:check_record:414] Checking if record api-test.dev.example.com. exists in zone Zxxxxxxxxxxxx 
 2019-04-08T20:30:15.552Z INFO     [main.py:check_record:425] Found existing record api-test.dev.example.com. in zone Zxxxxxxxxxxxx 
-2019-04-08T20:30:15.552Z INFO     [main.py:create_cname_record:450] CNAME record already exists, doing nothing: api-test.dev.example.com -> dev-alb-api-dynamic-xxxxxxxxx.ap-northeast-1.elb.amazonaws.com 
+2019-04-08T20:30:15.552Z INFO     [main.py:create_cname_record:450] ALIAS record already exists, doing nothing: api-test.dev.example.com -> dev-alb-api-dynamic-xxxxxxxxx.ap-northeast-1.elb.amazonaws.com 
 2019-04-08T20:30:15.552Z INFO     [main.py:create_env:573] Successfully finished creating environment dev-dynamic-test 
 ```
 
 #### Delete API (existing env)
-`curl https://eden.example.com/api/v1/delete?name=test&profile=api`
+`curl https://eden.example.com/api/v1/delete?name=test&profile=api -H "x-api-key:YOURAPIKEY"`
 
 ```
 2019-04-10T23:11:38.515Z INFO     [main.py:check_record:495] Checking if record api-test.dev.example.com. exists in zone Zxxxxxxxxxxxx 
 2019-04-10T23:11:38.752Z INFO     [main.py:check_record:506] Found existing record api-test.dev.example.com. in zone Zxxxxxxxxxxxx 
-2019-04-10T23:11:38.996Z INFO     [main.py:delete_cname_record:596] Successfully removed CNAME record api-test.dev.example.com 
+2019-04-10T23:11:38.996Z INFO     [main.py:delete_cname_record:596] Successfully removed ALIAS record api-test.dev.example.com 
 2019-04-10T23:11:39.245Z INFO     [main.py:delete_env:665] ECS Service dev-dynamic-test exists, will delete 
 2019-04-10T23:11:39.401Z INFO     [main.py:delete_env:670] Successfully deleted service dev-dynamic-test from cluster dev 
 2019-04-10T23:11:39.573Z INFO     [main.py:delete_alb_host_listener_rule:397] ELBv2 listener rule for target group arn:aws:elasticloadbalancing:ap-northeast-1:xxxxxxxxxxxx:targetgroup/dev-dynamic-test/xxxxxxxx and host api-test.dev.example.com found, will delete 
@@ -117,11 +125,11 @@ Optional query parameters:
 ```
 
 #### Delete API (non-existent env)
-`curl https://eden.example.com/api/v1/delete?name=test&profile=api`
+`curl https://eden.example.com/api/v1/delete?name=test&profile=api -H "x-api-key:YOURAPIKEY"`
 
 ```
 2019-04-10T23:14:46.216Z INFO     [main.py:check_record:495] Checking if record api-test.dev.example.com. exists in zone Zxxxxxxxxxxxx 
-2019-04-10T23:14:46.514Z INFO     [main.py:delete_cname_record:600] CNAME record for api-test.dev.example.com does not exist, skipping deletion 
+2019-04-10T23:14:46.514Z INFO     [main.py:delete_cname_record:600] ALIAS record for api-test.dev.example.com does not exist, skipping deletion 
 2019-04-10T23:14:46.872Z INFO     [main.py:delete_env:662] ECS Service dev-dynamic-test not found, skipping deletion 
 2019-04-10T23:14:46.923Z INFO     [main.py:delete_env:691] Target group dev-dynamic-test not found, skipping deletion of listener rule and target group 
 2019-04-10T23:14:46.991Z INFO     [main.py:delete_env:697] Deleted all task definitions for family: dev-dynamic-test, 0 tasks deleted total 
@@ -157,7 +165,7 @@ For more information on module version pinning, see [Selecting a Revision](https
 | log\_retention\_in\_days | eden API Lambda Function log retention in days | string | `"30"` | no |
 | memory | Lambda Function memory in megabytes | string | `"256"` | no |
 | name | Resource name | string | `"eden"` | no |
-| region | Region to create API Gateway in. "default" will select provider's cirrent region | string | `"default"` | no |
+| region | Region to create API Gateway in. "default" will select provider's current region | string | `"default"` | no |
 | runtime | Lambda Function runtime | string | `"python3.7"` | no |
 | tags | Resource tags | map(string) | `{}` | no |
 | timeout | Lambda Function timeout in seconds | string | `"60"` | no |

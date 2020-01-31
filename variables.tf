@@ -1,5 +1,5 @@
 variable "region" {
-  description = "Region to create API Gateway in. \"default\" will select provider's cirrent region"
+  description = "Region to create API Gateway in. \"default\" will select provider's current region"
   default     = "default"
 }
 
