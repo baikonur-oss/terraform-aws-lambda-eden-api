@@ -66,7 +66,16 @@ def fetch_profile(profile_name: str):
         logger.warning(error)
         return None, generate_response(error, 501)
 
-    return r['Items'][0]['profile'], None
+    profile = r['Items'][0]['profile']
+
+    try:
+        profile_json = json.loads(profile)
+    except json.JSONDecodeError as e:
+        error = f"JSON decode error: {e}"
+        logger.error(error)
+        return None, generate_response(error, 501)
+
+    return profile_json, None
 
 
 def create_env(name, image_uri, profile_name, config):
@@ -145,7 +154,7 @@ def generate_response(message, status_code, additional_fields=None):
             'message': message,
     }
 
-    for k, v in additional_fields:
+    for k, v in additional_fields.items():
         ret_dict[k] = v
 
     return {
