@@ -48,10 +48,13 @@ def fetch_profile(profile_name: str):
     except Exception as e:
         if hasattr(e, 'response') and 'Error' in e.response:
             logger.error(e.response['Error']['Message'])
-            return None
+            error = e.response['Error']['Message']
+            logger.error(error)
+            return None, generate_response(error, 501)
         else:
-            logger.error(f"Unknown exception raised: {e}")
-            return None
+            error = f"Unknown exception raised: {e}"
+            logger.error(error)
+            return None, generate_response(error, 501)
 
     if 'Items' not in r or len(r['Items']) == 0:
         error = f"Profile {profile_name} not found in remote table!"
@@ -177,13 +180,10 @@ def validate_params(query_string_parameters, check_params: list):
 
 
 def lambda_handler(event, context):
+    profile_name = 'default'
     if event['queryStringParameters'] is not None:
         if 'profile' in event['queryStringParameters'] and event['queryStringParameters']['profile'] is not None:
             profile_name = event['queryStringParameters']['profile']
-        else:
-            profile_name = 'default'
-    else:
-        profile_name = 'default'
 
     config, e = fetch_profile(profile_name)
 
