@@ -55,7 +55,7 @@ variable "eden_table" {
 }
 
 variable "api_acm_certificate_arn" {
-  description = "ACM certificate ARN for eden API ALB"
+   description = "ACM certificate ARN for eden API Gateway"
 }
 
 ## s3 bucket
@@ -80,4 +80,3 @@ variable "log_retention_in_days" {
   description = "eden API Lambda Function log retention in days"
   default     = 30
 }
-
