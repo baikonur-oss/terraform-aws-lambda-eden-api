@@ -154,7 +154,7 @@ For more information on module version pinning, see [Selecting a Revision](https
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| api\_acm\_certificate\_arn | ACM certificate ARN for eden API ALB | string | n/a | yes |
+| api\_acm\_certificate\_arn | ACM certificate ARN for eden API Gateway | string | n/a | yes |
 | api\_domain\_name | eden API domain name | string | n/a | yes |
 | api\_zone\_id | Route 53 Zone ID for eden API ALB | string | n/a | yes |
 | dynamic\_zone\_id | Route 53 Zone ID of zone to use to create environments | string | n/a | yes |

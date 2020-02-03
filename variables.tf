@@ -55,7 +55,7 @@ variable "eden_table" {
 }
 
 variable "api_acm_certificate_arn" {
-   description = "ACM certificate ARN for eden API Gateway"
+  description = "ACM certificate ARN for eden API Gateway"
 }
 
 ## s3 bucket
