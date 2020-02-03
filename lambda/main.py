@@ -47,7 +47,6 @@ def fetch_profile(profile_name: str):
         )
     except Exception as e:
         if hasattr(e, 'response') and 'Error' in e.response:
-            logger.error(e.response['Error']['Message'])
             error = e.response['Error']['Message']
             logger.error(error)
             return None, generate_response(error, 501)
