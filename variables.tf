@@ -1,3 +1,8 @@
+variable "region" {
+  description = "Region to create API Gateway in. \"default\" will select provider's current region"
+  default     = "default"
+}
+
 # Lambda
 variable "timezone" {
   description = "tz database timezone name (e.g. Asia/Tokyo)"
@@ -30,7 +35,7 @@ variable "runtime" {
 
 variable "name" {
   description = "Resource name"
-  default     = "env_manager"
+  default     = "eden"
 }
 
 variable "tracing_mode" {
@@ -49,41 +54,13 @@ variable "eden_table" {
   default     = "eden"
 }
 
-## alb
-variable "internal" {
-  description = "Should eden API ALB be internal?"
-  default     = false
-}
-
-variable "count" {
-  default = 1
-}
-
-variable "api_subnet_ids" {
-  description = "List of subnet IDs for eden API ALB to use"
-  type        = list(string)
-}
-
-variable "api_security_group_ids" {
-  description = "List of security group IDs for eden API ALB to use"
-  type        = list(string)
-}
-
-variable "api_access_logs_bucket_name" {
-  description = "S3 bucket name for saving eden API access logs"
-}
-
-variable "api_access_logs_prefix" {
-  description = "Path prefix for eden API access logs"
-}
-
 variable "api_acm_certificate_arn" {
-  description = "ACM certificate ARN for eden API ALB"
+  description = "ACM certificate ARN for eden API Gateway"
 }
 
 ## s3 bucket
-variable "config_bucket_name" {
-  description = "S3 bucket name containing Config JSON file"
+variable "endpoints_bucket_name" {
+  description = "S3 bucket name containing endpoints JSON file"
 }
 
 ### route53
@@ -96,11 +73,10 @@ variable "api_domain_name" {
 }
 
 variable "dynamic_zone_id" {
-  description = "Route 53 Zone ID of zone to use to create dynamic environments"
+  description = "Route 53 Zone ID of zone to use to create environments"
 }
 
 variable "log_retention_in_days" {
   description = "eden API Lambda Function log retention in days"
   default     = 30
 }
-
