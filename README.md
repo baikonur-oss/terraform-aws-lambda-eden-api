@@ -12,7 +12,7 @@ eden API is fast - both create and delete commands usually take no more than 5 s
 
 For CLI flavor, see aws-eden-cli at [GitHub](https://github.com/baikonur-oss/aws-eden-cli).
 
-![terraform v0.11.x](https://img.shields.io/badge/terraform-v0.11.x-brightgreen.svg)
+![terraform v0.12.x](https://img.shields.io/badge/terraform-v0.12.x-brightgreen.svg)
 
 ## Developing with eden
 
