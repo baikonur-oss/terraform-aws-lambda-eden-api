@@ -1,4 +1,5 @@
 import datetime
+import decimal
 import json
 import logging
 import os
@@ -10,7 +11,6 @@ from boto3.dynamodb.conditions import Key
 # set up logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-logger.info('Loading eden_core')
 
 dynamodb_client = boto3.client('dynamodb')
 dynamodb_resource = boto3.resource('dynamodb')
@@ -94,9 +94,9 @@ def create_env(name, image_uri, profile_name, config):
             Item={
                 'type': profile_name,
                 'name': name,
-                'type_name': f"{profile_name}${name}",
-                'last_updated_time': str(datetime.datetime.now().timestamp()),
+                'last_updated': decimal.Decimal(datetime.datetime.now().timestamp()),
                 'endpoint': r['cname'],
+                'kind': 'environment',
             }
         )
     except Exception as e:
